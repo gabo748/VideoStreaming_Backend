@@ -3,6 +3,8 @@ package com.stream.app.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.stream.app.model.Category;
+import com.stream.app.service.CategoryService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -27,11 +29,16 @@ import com.stream.app.service.VideoService;
 public class VideoController {
 	
 	private VideoService videoService;
+	private CategoryService categoryService;
 	
 	
 	
-	public VideoController(VideoService videoService) {
+	public VideoController(
+			VideoService videoService,
+			CategoryService categoryService
+	) {
 		this.videoService = videoService;
+		this.categoryService = categoryService;
 	}
 
 
@@ -40,14 +47,19 @@ public class VideoController {
 	public ResponseEntity<?> create(
 				@RequestParam("file") MultipartFile file,
 				@RequestParam("title") String title,
-				@RequestParam("description") String description
+				@RequestParam("description") String description,
+				@RequestParam("categoryId") String categoryId
 			){
 		
 		Video video = new Video();
-		
+		Category category = new Category();
+
+		category.setId(Long.parseLong(categoryId));
 		video.setTitle(title);
 		video.setDescription(description);
 		video.setVideoId(UUID.randomUUID().toString());
+		video.setCategory(category);
+
 		
 		Video savedVideo = videoService.save(video, file);
 		
@@ -97,5 +109,10 @@ public class VideoController {
 	@GetMapping
 	public List<Video> getAllVideo(){
 		return videoService.getAll();
+	}
+
+	@GetMapping("/categories")
+	public List<Category> getAllCategories() {
+		return categoryService.getAll();
 	}
 }
