@@ -46,4 +46,21 @@ public class FavoritesServiceImp implements FavoritesService {
 
         return user.getFavorites();
     }
+    @Override
+    public void removeFavoriteByUserAndId(Long userId, Long favoriteId) {
+        // Verificar si el usuario existe
+        Login user = loginRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // Buscar el favorito por ID y verificar que pertenece al usuario
+        Favorites favorite = favoritesRepository.findById(favoriteId)
+                .orElseThrow(() -> new RuntimeException("Favorite not found with ID: " + favoriteId));
+
+        if (!favorite.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Favorite does not belong to the user with ID: " + userId);
+        }
+
+        // Eliminar el favorito
+        favoritesRepository.deleteById(favoriteId);
+    }
 }

@@ -2,6 +2,7 @@ package com.stream.app.controller;
 
 import com.stream.app.model.DTO.AddFavoriteRequest;
 import com.stream.app.model.Favorites;
+import com.stream.app.payload.CustomMessage;
 import com.stream.app.service.FavoritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,15 @@ public class FavoritesController {
     public ResponseEntity<List<Favorites>> getFavorites(@PathVariable Long userId) {
         List<Favorites> favorites = favoritesService.getFavoritesByUserId(userId);
         return ResponseEntity.ok(favorites);
+    }
+
+    @DeleteMapping("/{userId}/{favoriteId}")
+    public ResponseEntity<?> removeFavorite(
+            @PathVariable Long userId,
+            @PathVariable Long favoriteId) {
+        favoritesService.removeFavoriteByUserAndId(userId, favoriteId);
+
+        CustomMessage successResponse = new CustomMessage("Favorie removed successfully!", true);
+        return ResponseEntity.ok(successResponse);
     }
 }

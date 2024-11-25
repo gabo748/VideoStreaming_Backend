@@ -9,4 +9,6 @@ public interface FavoritesService {
     public Favorites addFavorite(Long userId, String favoriteName);
 
     public List<Favorites> getFavoritesByUserId(Long userId);
+
+    public void removeFavoriteByUserAndId(Long userId, Long favoriteId);
 }
