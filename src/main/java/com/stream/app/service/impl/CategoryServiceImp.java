@@ -16,4 +16,10 @@ public class CategoryServiceImp implements CategoryService  {
     public List<Category> getAll() {
         return categoryRepo.findAll();
     }
+
+    @Override
+    public Category getById(Long id) {
+        return categoryRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + id));
+    }
 }

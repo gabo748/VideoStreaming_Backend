@@ -1,9 +1,7 @@
 package com.stream.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,8 @@ public class Video {
 	private String contentType;
 	private String filePath;
 
-	@OneToOne
-	@JoinColumn(name = "category_id") // Define la columna de unión
+	@ManyToOne
+	@JoinColumn(name = "category_id", nullable = false) // Define la columna de unión
+	@JsonIgnore
 	private Category category;
 }

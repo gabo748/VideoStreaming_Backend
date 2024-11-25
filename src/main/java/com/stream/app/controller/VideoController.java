@@ -43,43 +43,49 @@ public class VideoController {
 
 
 // ####################  Create Video  ##########################
-	@PostMapping
-	public ResponseEntity<?> create(
-				@RequestParam("file") MultipartFile file,
-				@RequestParam("title") String title,
-				@RequestParam("description") String description,
-				@RequestParam("categoryId") String categoryId
-			){
-		
-		Video video = new Video();
-		Category category = new Category();
+@PostMapping
+public ResponseEntity<?> create(
+		@RequestParam("file") MultipartFile file,
+		@RequestParam("title") String title,
+		@RequestParam("description") String description,
+		@RequestParam("categoryId") String categoryId
+) {
+	// Verifica la existencia de la categoría
+	Category category = categoryService.getById(Long.parseLong(categoryId));
+	if (category == null) {
+		return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST)
+				.body(CustomMessage.builder()
+						.message("Category not found")
+						.success(false)
+						.build()
+				);
+	}
 
-		category.setId(Long.parseLong(categoryId));
-		video.setTitle(title);
-		video.setDescription(description);
-		video.setVideoId(UUID.randomUUID().toString());
-		video.setCategory(category);
+	// Crear el video
+	Video video = new Video();
+	video.setTitle(title);
+	video.setDescription(description);
+	video.setVideoId(UUID.randomUUID().toString());
+	video.setCategory(category);
 
-		
-		Video savedVideo = videoService.save(video, file);
-		
-		if(savedVideo != null) {
-			return ResponseEntity
+	// Guardar el video
+	Video savedVideo = videoService.save(video, file);
+
+	if (savedVideo != null) {
+		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(savedVideo);
-		}
-		else {
-			return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(CustomMessage.builder()
-							.message("Video not uploaded")
-							.success(false)
-							.build()
-						);
-		}
-		
-		
+	} else {
+		return ResponseEntity
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(CustomMessage.builder()
+						.message("Video not uploaded")
+						.success(false)
+						.build()
+				);
 	}
+}
 
 // ####################  Stream Video  ##########################
 	
