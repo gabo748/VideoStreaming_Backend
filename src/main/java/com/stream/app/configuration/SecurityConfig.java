@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/login/**").permitAll() // Allow access to login endpoints
                         .requestMatchers("/api/v1/videos/**").permitAll()
+                        .requestMatchers("/api/v1/favorites/**").permitAll()
                         .anyRequest().authenticated() // Protect all other endpoints
                 );
         return http.build();

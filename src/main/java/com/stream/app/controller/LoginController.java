@@ -32,10 +32,9 @@ public class LoginController {
     public ResponseEntity<?> validateUser(@RequestParam String username, @RequestParam String password) {
         Login login = loginService.findByUsername(username);
         if (login != null && loginService.validatePassword(password, login.getPassword())) {
-            CustomMessage successResponse = new CustomMessage("User Login in successfully!", true);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(successResponse);
+                    .body(login);
         }
 
         CustomMessage failureResponse = new CustomMessage("Credentials Invalid", false);
