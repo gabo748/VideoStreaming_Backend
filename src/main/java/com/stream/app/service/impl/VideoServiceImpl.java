@@ -103,4 +103,9 @@ public class VideoServiceImpl implements VideoService {
 		return videoRepo.findAll();
 	}
 
+	@Override
+	public List<Video> findAllByCategoryName(String categoryName) {
+		return videoRepo.findByCategory_Name(categoryName);
+	}
+
 }

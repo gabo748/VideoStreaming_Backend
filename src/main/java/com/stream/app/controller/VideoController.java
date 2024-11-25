@@ -115,4 +115,11 @@ public class VideoController {
 	public List<Category> getAllCategories() {
 		return categoryService.getAll();
 	}
+
+	@GetMapping("/category/{categoryName}")
+	public List<Video> getAllVideosByCategory(
+			@PathVariable("categoryName") String categoryName
+	) {
+		return videoService.findAllByCategoryName(categoryName);
+	}
 }
